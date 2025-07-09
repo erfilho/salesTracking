@@ -32,6 +32,29 @@ Aplicação web para gerenciamento do fluxo de vendas e produção em vidraçari
   ![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=flat&logo=firebase&logoColor=black)
   ![Cloud Functions](https://img.shields.io/badge/Cloud%20Functions-FFCA28?style=flat&logo=firebase&logoColor=black)
 
+## Diagrama
+
+```mermaid
+  flowchart TD
+    A[Frontend React] -->|Consulta/Atualiza| B[(Firestore Database)]
+    A -->|Autenticação| C[Firebase Auth]
+    A -->|Chamadas específicas| D[Cloud Functions]
+    B -->|Triggers| D
+    D -->|Notificações| E[E-mail/WhatsApp]
+    D -->|Logs| F[Firebase Console]
+
+    subgraph Firebase
+        B
+        C
+        D
+    end
+
+    subgraph Clientes
+        G[Administrador] -->|CRUD Completo| A
+        H[Visualizador] -->|Apenas Leitura| A
+    end
+```
+
 ## 🚀 Como Executar
 
 1. **Pré-requisitos**:
@@ -41,7 +64,7 @@ Aplicação web para gerenciamento do fluxo de vendas e produção em vidraçari
 
 2. **Configuração**:
    ```bash
-   git clone https://github.com/erfilho/salesTracker.git
+   git clone https://github.com/erfilho/salesTracking.git
    cd salesTracker
    npm install
    ```
