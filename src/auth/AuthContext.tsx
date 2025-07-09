@@ -1,5 +1,5 @@
-import { auth, db } from "../firebase.ts";
-import { loginUser, registerUser } from "../services/firestoreService.ts";
+import { auth, db } from "../firebase";
+import { loginUser, registerUser } from "./userAuthService";
 
 import { type User, type UserCredential } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
@@ -15,7 +15,8 @@ import {
 interface AuthContextType {
   currentUser: User | null;
   userRole: "admin" | "viewer" | null;
-  loginUser: (email: string, password: string) => Promise<UserCredential>;
+  loginUser: (email: string, password: string) => Promise<{credential: UserCredential, role: 'admin' | 'viewer'}>;
+  logoutUser: () => Promise<void>;
   registerUser: (
     email: string,
     password: string,
@@ -38,23 +39,43 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      if (user) {
-        const userDoc = await getDoc(doc(db, "users", user.uid));
-        setUserRole(userDoc.data()?.role || "viewer");
-      } else {
+      try {
+        if (user) {
+          const userDoc = await getDoc(doc(db, "users", user.uid));
+          if (userDoc.exists()) {
+            setUserRole(userDoc.data()?.role || "viewer");
+          } else {
+            throw new Error("Documento do usuário não encontrado!");
+          }
+        } else {
+          setUserRole(null);
+        }
+      } catch (err) {
         setUserRole(null);
+        throw new Error(`Erro ao carregar o usuário! ${err}`);
+      } finally {
+        setCurrentUser(user);
+        setLoading(false);
       }
-
-      setCurrentUser(user);
-      setLoading(false);
     });
     return unsubscribe;
   }, []);
+
+  const logoutUser = async () => {
+    try {
+      await logoutUser();
+      setCurrentUser(null);
+      setUserRole(null);
+    } catch (err) {
+      console.error("Logout error: ", err);
+    }
+  };
 
   const value: AuthContextType = {
     currentUser,
     userRole,
     loginUser,
+    logoutUser,
     registerUser,
     isAdmin: userRole === "admin",
   };
