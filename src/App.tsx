@@ -1,20 +1,40 @@
-import { useState } from "react";
-import "./App.css";
+import { Route, Routes } from "react-router-dom";
+
+import { AuthProvider } from "./auth/AuthContext";
+import { ProtectedRoute } from "./components/ProtectedRoute";
+
+import UserManagement from "./pages/admin/userManagement";
+import Dashboard from "./pages/dashboard/dashboard";
+import NotFound from "./pages/notFound";
+import Login from "./pages/public/login";
+import NewSaleForm from "./pages/sales/newSaleForm";
+import SalesDetails from "./pages/sales/salesDetails";
+import SalesList from "./pages/sales/salesList";
 
 function App() {
-  const [count, setCount] = useState(0);
-
-  const handleCount = () => {
-    setCount(count + 1);
-  };
-
   return (
-    <>
-      <div>
-        <h2 className="text-4xl font-bold text-amber-600"> Hello world! </h2>
-        <button onClick={handleCount}> Contando: {count} </button>
-      </div>
-    </>
+    <AuthProvider>
+      <Routes>
+        {/* Public routes */}
+        <Route path="/login" element={<Login />} />
+
+        {/* Protected routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/" element={<Dashboard />} />
+          <Route path="/vendas" element={<SalesList />} />
+          <Route path="/vendas:id" element={<SalesDetails />} />
+        </Route>
+
+        {/* Admin routes */}
+        <Route element={<ProtectedRoute adminOnly />}>
+          <Route path="/admin/usuarios" element={<UserManagement />} />
+          <Route path="/admin/nova-venda" element={<NewSaleForm />} />
+        </Route>
+
+        {/* 404 page */}
+        <Route path="/*" element={<NotFound />} />
+      </Routes>
+    </AuthProvider>
   );
 }
 
