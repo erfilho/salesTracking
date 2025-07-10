@@ -1,10 +1,13 @@
-import LogoutButton from "../../components/buttons/logoutButton";
+import type React from "react";
 
-function Dashboard() {
+import DashDock from "../../components/dashDock/dashDock";
+
+function Dashboard(): React.ReactNode {
   return (
-    <div>
+    <div className="flex flex-col w-full h-dvh bg-slate-200 static">
       {" "}
-      Dashboard page! <LogoutButton />
+      Dashboard page!
+      <DashDock />
     </div>
   );
 }

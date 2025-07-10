@@ -1,7 +1,12 @@
 import { auth, db } from "../firebase";
-import { loginUser, registerUser } from "./userAuthService";
+import { registerUser } from "./userAuthService";
 
-import { type User, type UserCredential } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  signOut,
+  type User,
+  type UserCredential,
+} from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 
 import {
@@ -15,7 +20,10 @@ import {
 interface AuthContextType {
   currentUser: User | null;
   userRole: "admin" | "viewer" | null;
-  loginUser: (email: string, password: string) => Promise<{credential: UserCredential, role: 'admin' | 'viewer'}>;
+  loginUser: (
+    email: string,
+    password: string
+  ) => Promise<{ credential: UserCredential; role: "admin" | "viewer" }>;
   logoutUser: () => Promise<void>;
   registerUser: (
     email: string,
@@ -27,6 +35,12 @@ interface AuthContextType {
 
 interface AuthProviderProps {
   children: ReactNode;
+}
+
+interface UserData {
+  email: string;
+  role: "admin" | "viewer";
+  createdAt: Date;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -61,9 +75,53 @@ export function AuthProvider({ children }: AuthProviderProps) {
     return unsubscribe;
   }, []);
 
-  const logoutUser = async () => {
+  const loginUser = async (
+    email: string,
+    password: string
+  ): Promise<{ credential: UserCredential; role: "admin" | "viewer" }> => {
     try {
-      await logoutUser();
+      const credential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      const userDoc = await getDoc(doc(db, "users", credential.user.uid));
+
+      if (!userDoc.exists()) {
+        await signOut(auth);
+        throw new Error("User document not found!");
+      }
+
+      const userData = userDoc.data() as UserData;
+
+      if (!["admin", "viewer"].includes(userData.role)) {
+        throw new Error("Invalid user role!");
+      }
+
+      return {
+        credential,
+        role: userData.role,
+      };
+    } catch (err) {
+      console.error("Login error!");
+      if (err instanceof Error) {
+        if (err.message.includes("auth/invalid-credential")) {
+          throw new Error("Credenciais inválidas");
+        }
+        if (err.message.includes("auth/too-many-requests")) {
+          throw new Error("Acesso temporariamente bloqueado. Tente mais tarde");
+        }
+      }
+
+      throw err;
+    }
+  };
+
+  const logoutUser = async (): Promise<void> => {
+    try {
+      await signOut(auth);
+
       setCurrentUser(null);
       setUserRole(null);
     } catch (err) {
