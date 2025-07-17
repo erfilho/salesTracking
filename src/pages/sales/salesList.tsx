@@ -2,13 +2,13 @@ import { useAuth } from "../../auth/AuthContext";
 import DashDock from "../../components/dashDock/dashDock";
 
 const TABLE_HEAD = [
-  "NUM_VENDA",
-  "NOME_CLIENTE",
-  "TIPO_PRODUTO",
-  "DATA_ENTRADA",
-  "ST_VIDRO",
-  "ST_ALUMINIO",
-  "ACAO",
+  "N° VENDA",
+  "CLIENTE",
+  "TIPO DE PRODUTO",
+  "DATA DE ENTRADA",
+  "STATUS_VIDRO",
+  "STATUS_ALUMINIO",
+  "AÇÃO",
 ];
 
 /*  Tipos de status
@@ -72,7 +72,9 @@ function SalesList() {
           <thead>
             <tr>
               {TABLE_HEAD.map((item, key) => (
-                <th key={key}>{item}</th>
+                <th key={key} className="text-center px-2">
+                  {item}
+                </th>
               ))}
             </tr>
           </thead>
