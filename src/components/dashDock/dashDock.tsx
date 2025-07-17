@@ -24,6 +24,7 @@ function DashDock() {
       <div className="flex flex-row rounded-xl justify-center bg-slate-400 p-2 gap-2 w-1/4">
         {menu.map((button) => (
           <button
+            key={button.label}
             onClick={() => navigate(button.url)}
             className="flex flex-col items-center cursor-pointer"
           >
