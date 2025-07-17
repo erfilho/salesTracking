@@ -73,7 +73,6 @@ const LoginButton = ({
       {isLoading ? (
         <div className="flex items-center justify-center gap-2">
           <CircularProgress size={20} color="inherit" />
-          Carregando...
         </div>
       ) : (
         "Entrar"

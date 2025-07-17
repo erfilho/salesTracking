@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 
-import { FaHubspot, FaSignOutAlt, FaUserTag } from "react-icons/fa";
+import { FaHubspot, FaUserTag } from "react-icons/fa";
 import LogoutButton from "../buttons/logoutButton";
 
 function DashDock() {
@@ -13,12 +13,7 @@ function DashDock() {
     {
       label: "Sales",
       icon: <FaUserTag size={28} />,
-      url: "/about",
-    },
-    {
-      label: <LogoutButton />,
-      icon: <FaSignOutAlt size={28} />,
-      url: "/contact",
+      url: "/vendas",
     },
   ];
 
@@ -30,12 +25,13 @@ function DashDock() {
         {menu.map((button) => (
           <button
             onClick={() => navigate(button.url)}
-            className="flex flex-col items-center"
+            className="flex flex-col items-center cursor-pointer"
           >
             {button.icon}
             {button.label}
           </button>
         ))}
+        <LogoutButton />
       </div>
     </div>
   );

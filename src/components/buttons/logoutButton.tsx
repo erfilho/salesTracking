@@ -1,3 +1,4 @@
+import { FaSignOutAlt } from "react-icons/fa";
 import { useAuth } from "../../auth/AuthContext";
 
 import { useNavigate } from "react-router-dom";
@@ -16,7 +17,15 @@ const LogoutButton = () => {
     }
   };
 
-  return <button onClick={handleLogout}>Logout</button>;
+  return (
+    <button
+      onClick={handleLogout}
+      className="flex flex-col items-center cursor-pointer"
+    >
+      <FaSignOutAlt size={28} />
+      Logout
+    </button>
+  );
 };
 
 export default LogoutButton;
