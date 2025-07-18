@@ -33,6 +33,17 @@ function NewSaleForm() {
     },
   ];
 
+  const TIPOS_PRODUCTS = [
+    "Vidro temperado M2000",
+    "Esquadria de alumínio + vidro",
+    "Vidro temperado fixo",
+    "Portão automático",
+    "Portão de alumínio",
+    "Guarda corpo",
+    "Pele de vidro",
+    "Granitos",
+  ];
+
   const [numeroVenda, setNumeroVenda] = useState<number | null>(null);
   const [nomeCliente, setNomeCliente] = useState("");
   const [tipoProduto, setTipoProduto] = useState("");
@@ -89,6 +100,26 @@ function NewSaleForm() {
           onChange={(e) => setDataEntrada(e.target.value)}
           required
         />
+
+        <label htmlFor="status_aluminio" className="text-start w-full">
+          {" "}
+          Tipo do produto{" "}
+        </label>
+        <select
+          id="status_vidro"
+          value={tipoProduto}
+          onChange={(e) => setTipoProduto(e.target.value)}
+          className="px-4 py-2 rounded-lg bg-slate-400 w-full self-start placeholder-white focus:outline-none"
+        >
+          {TIPOS_PRODUCTS.map((item, key) => {
+            return (
+              <option value={item} key={key}>
+                {" "}
+                {item}{" "}
+              </option>
+            );
+          })}
+        </select>
 
         <div className="flex flex-row items-center gap-3 p-0 w-full">
           <div className="flex flex-col w-1/2">
