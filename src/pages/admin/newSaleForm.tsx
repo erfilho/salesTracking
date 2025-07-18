@@ -4,12 +4,16 @@ import DashDock from "../../components/dashDock/dashDock";
 function NewSaleForm() {
   const STATUS_OPTION = [
     {
-      value: "tem",
-      label: "Tem ( no projeto )",
-    },
-    {
       value: "n_tem",
       label: "Não tem ( no projeto )",
+    },
+    {
+      value: "n_iniciado",
+      label: "Não iniciado",
+    },
+    {
+      value: "c_projeto",
+      label: "Com projeto",
     },
     {
       value: "em_andamento",
