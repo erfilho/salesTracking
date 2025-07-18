@@ -7,7 +7,7 @@ import UserManagement from "./pages/admin/userManagement";
 import Dashboard from "./pages/dashboard/dashboard";
 import NotFound from "./pages/notFound";
 import Login from "./pages/public/login";
-import NewSaleForm from "./pages/sales/newSaleForm";
+import NewSaleForm from "./pages/admin/newSaleForm";
 import SalesDetails from "./pages/sales/salesDetails";
 import SalesList from "./pages/sales/salesList";
 
