@@ -1,6 +1,10 @@
 import { useState } from "react";
 import DashDock from "../../components/dashDock/dashDock";
 
+import { saveSale } from "../../services/firestoreService";
+
+import { getAuth } from "firebase/auth";
+
 function NewSaleForm() {
   const STATUS_OPTION = [
     {
@@ -48,12 +52,35 @@ function NewSaleForm() {
     "Granitos",
   ];
 
-  const [numeroVenda, setNumeroVenda] = useState<number | null>(null);
+  const [numeroVenda, setNumeroVenda] = useState("");
   const [nomeCliente, setNomeCliente] = useState("");
   const [tipoProduto, setTipoProduto] = useState("");
   const [dataEntrada, setDataEntrada] = useState("");
   const [statusVidro, setStatusVidro] = useState("");
   const [statusAluminio, setStatusAluminio] = useState("");
+
+  const [isSaving, setIsSaving] = useState(false);
+
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  // Função para salvar a venda no Firebase
+  const handleSave = async () => {
+    setIsSaving(true);
+
+    console.log(user);
+
+    await saveSale({
+      saleNumber: numeroVenda,
+      clientName: nomeCliente,
+      productType: tipoProduto,
+      enterDate: new Date(dataEntrada).toLocaleDateString("pt-BR"),
+      glassStatus: statusVidro,
+      aluminumStatus: statusAluminio,
+    });
+
+    setIsSaving(false);
+  };
 
   return (
     <div className="flex flex-col items-center gap-2 p-4 bg-zinc-200 h-screen">
@@ -74,7 +101,7 @@ function NewSaleForm() {
           value={numeroVenda ?? ""}
           onChange={(e) => {
             const value = e.target.value;
-            setNumeroVenda(Number(value));
+            setNumeroVenda(value);
           }}
           required
         />
@@ -170,6 +197,14 @@ function NewSaleForm() {
             </select>
           </div>
         </div>
+
+        <button
+          disabled={isSaving}
+          onClick={handleSave}
+          className="my-3 px-4 py-2 rounded-lg bg-slate-400 w-1/2 self-center cursor-pointer placeholder-white focus:outline-none"
+        >
+          {isSaving ? "Salvando" : "Salvar"}
+        </button>
       </form>
       <DashDock />
     </div>
