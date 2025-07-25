@@ -5,7 +5,7 @@ import {
   doc,
   getDocs,
   query,
-  where,
+  Timestamp,
 } from "firebase/firestore";
 
 import { db } from "../firebase";
@@ -14,26 +14,29 @@ export interface SaleData {
   saleNumber: string;
   clientName: string;
   productType: string;
-  enterDate: string;
+  enterDate: Timestamp;
   glassStatus: string;
   aluminumStatus: string;
 }
 
-export const getSales = async (userId: string) => {
+export interface SaleDetails extends SaleData {
+  id: string;
+}
+
+export const getSales = async (): Promise<SaleDetails[] | undefined> => {
   try {
     const salesRef = collection(db, "sales");
-    const q = query(salesRef, where("userId", "==", userId));
+    const q = query(salesRef);
     const qSnapshot = await getDocs(q);
     const fetchedSales = qSnapshot.docs.map((doc) => ({
       id: doc.id,
       saleNumber: doc.data().saleNumber,
       clientName: doc.data().clientName,
       productType: doc.data().productType,
-      enterDate: doc.data().enterDate.toDate().toLocaleDateString("pt-BR"),
+      enterDate: doc.data().enterDate,
       glassStatus: doc.data().glassStatus,
       aluminumStatus: doc.data().aluminumStatus,
     }));
-
     return fetchedSales;
   } catch (error) {
     console.error("Error on getSales function", error);

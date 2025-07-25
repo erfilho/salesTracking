@@ -1,5 +1,8 @@
+import { useEffect, useState } from "react";
 import { useAuth } from "../../auth/AuthContext";
 import DashDock from "../../components/dashDock/dashDock";
+
+import { getSales, type SaleDetails } from "../../services/firestoreService";
 
 const TABLE_HEAD = [
   "N° VENDA",
@@ -52,15 +55,32 @@ const TABLE_DATA = [
 ];
 
 function SalesList() {
-  const { isAdmin } = useAuth();
+  const { userRole, isAdmin } = useAuth();
 
-  function handleDetail(num_venda: number) {
+  const [sales, setSales] = useState<SaleDetails[]>([]);
+
+  function handleDetail(num_venda: string) {
     return alert(num_venda);
   }
 
-  function handleUpdateStatus(num_venda: number, type: string) {
+  function handleUpdateStatus(num_venda: string, type: string) {
     return alert(`${num_venda} - ${type}`);
   }
+
+  // Buscando as vendas no banco de dados
+  useEffect(() => {
+    const fetchSales = async () => {
+      if (!userRole) return;
+
+      try {
+        const data = await getSales();
+        setSales(data || []);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchSales();
+  }, [userRole]);
 
   return (
     <div className="flex flex-col justify-center items-center h-full w-full gap-2">
@@ -79,60 +99,47 @@ function SalesList() {
             </tr>
           </thead>
           <tbody>
-            {TABLE_DATA.map(
-              (
-                {
-                  NUM_VENDA,
-                  NOME_CLIENTE,
-                  TIPO_PRODUTO,
-                  DATA_ENTRADA,
-                  ST_VIDRO,
-                  ST_ALUMINIO,
-                },
-                index
-              ) => {
-                const isLast = index === TABLE_DATA.length - 1;
-                const classes = isLast
-                  ? "p-4 text-center"
-                  : "p-4 text-center border-b border-blue-gray-50";
+            {sales.map((sale) => {
+              const classes = "p-4 text-center";
 
-                return (
-                  <tr key={NUM_VENDA}>
-                    <td className={classes}>{NUM_VENDA}</td>
-                    <td className={classes}>{NOME_CLIENTE}</td>
-                    <td className={classes}>{TIPO_PRODUTO}</td>
-                    <td className={classes}>{DATA_ENTRADA}</td>
-                    <td
-                      className={
-                        isAdmin
-                          ? `cursor-pointer ${classes}`
-                          : `cursor-not-allowed ${classes}`
-                      }
-                      onClick={() => handleUpdateStatus(NUM_VENDA, "vidro")}
-                    >
-                      {ST_VIDRO}
-                    </td>
-                    <td
-                      className={
-                        isAdmin
-                          ? `cursor-pointer ${classes}`
-                          : `cursor-not-allowed ${classes}`
-                      }
-                      onClick={() => handleUpdateStatus(NUM_VENDA, "vidro")}
-                    >
-                      {ST_ALUMINIO}
-                    </td>
-                    <td
-                      className={`cursor-pointer ${classes}`}
-                      onClick={() => handleDetail(NUM_VENDA)}
-                    >
-                      {" "}
-                      Ver Detalhes 👁️{" "}
-                    </td>
-                  </tr>
-                );
-              }
-            )}
+              return (
+                <tr key={sale.id}>
+                  <td className={classes}>{sale.saleNumber}</td>
+                  <td className={classes}>{sale.clientName}</td>
+                  <td className={classes}>{sale.productType}</td>
+                  <td className={classes}>
+                    {sale.enterDate.toDate().toLocaleDateString("pt-BR")}
+                  </td>
+                  <td
+                    className={
+                      isAdmin
+                        ? `cursor-pointer ${classes}`
+                        : `cursor-not-allowed ${classes}`
+                    }
+                    onClick={() => handleUpdateStatus(sale.id, "vidro")}
+                  >
+                    {sale.glassStatus}
+                  </td>
+                  <td
+                    className={
+                      isAdmin
+                        ? `cursor-pointer ${classes}`
+                        : `cursor-not-allowed ${classes}`
+                    }
+                    onClick={() => handleUpdateStatus(sale.id, "vidro")}
+                  >
+                    {sale.aluminumStatus}
+                  </td>
+                  <td
+                    className={`cursor-pointer ${classes}`}
+                    onClick={() => handleDetail(sale.id)}
+                  >
+                    {" "}
+                    Ver Detalhes 👁️{" "}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

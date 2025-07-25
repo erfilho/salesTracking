@@ -2,43 +2,20 @@ import { useState } from "react";
 
 import { toast, Toaster } from "react-hot-toast";
 
+import { Timestamp } from "firebase/firestore";
 import DashDock from "../../components/dashDock/dashDock";
 import { saveSale } from "../../services/firestoreService";
 
 function NewSaleForm() {
   const STATUS_OPTION = [
-    {
-      value: "n_tem",
-      label: "Não tem ( no projeto )",
-    },
-    {
-      value: "n_iniciado",
-      label: "Não iniciado",
-    },
-    {
-      value: "c_projeto",
-      label: "Com projeto",
-    },
-    {
-      value: "em_andamento",
-      label: "Em andamento",
-    },
-    {
-      value: "ag_chegada",
-      label: "Aguardando chegada",
-    },
-    {
-      value: "ag_agendamento",
-      label: "Aguardando agendamento",
-    },
-    {
-      value: "ag_montagem",
-      label: "Aguardando montagem",
-    },
-    {
-      value: "finalizado",
-      label: "Finalizado",
-    },
+    "Não tem ( no projeto )",
+    "Não iniciado",
+    "Com projeto",
+    "Em andamento",
+    "Aguardando chegada",
+    "Aguardando agendamento",
+    "Aguardando montagem",
+    "Finalizado",
   ];
 
   const TIPOS_PRODUCTS = [
@@ -55,7 +32,7 @@ function NewSaleForm() {
   const [numeroVenda, setNumeroVenda] = useState("");
   const [nomeCliente, setNomeCliente] = useState("");
   const [tipoProduto, setTipoProduto] = useState("");
-  const [dataEntrada, setDataEntrada] = useState("");
+  const [dataEntrada, setDataEntrada] = useState<string>("");
   const [statusVidro, setStatusVidro] = useState("");
   const [statusAluminio, setStatusAluminio] = useState("");
 
@@ -70,7 +47,7 @@ function NewSaleForm() {
         saleNumber: numeroVenda,
         clientName: nomeCliente,
         productType: tipoProduto,
-        enterDate: new Date(dataEntrada).toLocaleDateString("pt-BR"),
+        enterDate: Timestamp.fromDate(new Date(dataEntrada)),
         glassStatus: statusVidro,
         aluminumStatus: statusAluminio,
       });
@@ -177,11 +154,11 @@ function NewSaleForm() {
                 {" "}
                 Selecione o status{" "}
               </option>
-              {STATUS_OPTION.map(({ value, label }, index) => {
+              {STATUS_OPTION.map((value, index) => {
                 return (
                   <option value={value} key={index}>
                     {" "}
-                    {label}{" "}
+                    {value}{" "}
                   </option>
                 );
               })}
@@ -204,11 +181,11 @@ function NewSaleForm() {
                 {" "}
                 Selecione o status{" "}
               </option>
-              {STATUS_OPTION.map(({ value, label }, index) => {
+              {STATUS_OPTION.map((value, index) => {
                 return (
                   <option value={value} key={index}>
                     {" "}
-                    {label}{" "}
+                    {value}{" "}
                   </option>
                 );
               })}
@@ -217,6 +194,7 @@ function NewSaleForm() {
         </div>
 
         <button
+          type="button"
           disabled={isSaving}
           onClick={handleSave}
           className="my-3 px-4 py-2 rounded-lg bg-slate-400 w-1/2 self-center cursor-pointer placeholder-white focus:outline-none"
