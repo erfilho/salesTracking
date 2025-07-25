@@ -8,9 +8,7 @@ import {
   where,
 } from "firebase/firestore";
 
-import { db, auth } from "../firebase";
-
-const user = auth.currentUser;
+import { db } from "../firebase";
 
 export interface SaleData {
   saleNumber: string;
@@ -46,7 +44,7 @@ export const getSales = async (userId: string) => {
 export const saveSale = async (saleData: SaleData) => {
   try {
     const saleRef = await addDoc(collection(db, "sales"), saleData);
-    
+
     console.log("Transcription saved with ID: ", saleRef.id);
     return saleRef.id;
   } catch (error) {

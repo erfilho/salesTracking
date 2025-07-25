@@ -1,9 +1,9 @@
 import { useState } from "react";
+
+import { toast, Toaster } from "react-hot-toast";
+
 import DashDock from "../../components/dashDock/dashDock";
-
 import { saveSale } from "../../services/firestoreService";
-
-import { getAuth } from "firebase/auth";
 
 function NewSaleForm() {
   const STATUS_OPTION = [
@@ -61,23 +61,28 @@ function NewSaleForm() {
 
   const [isSaving, setIsSaving] = useState(false);
 
-  const auth = getAuth();
-  const user = auth.currentUser;
-
   // Função para salvar a venda no Firebase
   const handleSave = async () => {
     setIsSaving(true);
 
-    console.log(user);
+    try {
+      const salePromise = saveSale({
+        saleNumber: numeroVenda,
+        clientName: nomeCliente,
+        productType: tipoProduto,
+        enterDate: new Date(dataEntrada).toLocaleDateString("pt-BR"),
+        glassStatus: statusVidro,
+        aluminumStatus: statusAluminio,
+      });
 
-    await saveSale({
-      saleNumber: numeroVenda,
-      clientName: nomeCliente,
-      productType: tipoProduto,
-      enterDate: new Date(dataEntrada).toLocaleDateString("pt-BR"),
-      glassStatus: statusVidro,
-      aluminumStatus: statusAluminio,
-    });
+      await toast.promise(salePromise, {
+        loading: "Salvando a venda",
+        success: "Venda salva com sucesso",
+        error: "Erro ao salvar a venda",
+      });
+    } catch (error) {
+      console.error(error);
+    }
 
     setIsSaving(false);
   };
@@ -132,16 +137,20 @@ function NewSaleForm() {
           required
         />
 
-        <label htmlFor="status_aluminio" className="text-start w-full">
+        <label htmlFor="tipo_produto" className="text-start w-full">
           {" "}
           Tipo do produto{" "}
         </label>
         <select
-          id="status_vidro"
+          id="tipo_produto"
           value={tipoProduto}
           onChange={(e) => setTipoProduto(e.target.value)}
           className="px-4 py-2 rounded-lg bg-slate-400 w-full self-start placeholder-white focus:outline-none"
         >
+          <option value="" disabled>
+            {" "}
+            Selecione o tipo do produto{" "}
+          </option>
           {TIPOS_PRODUCTS.map((item, key) => {
             return (
               <option value={item} key={key}>
@@ -164,6 +173,10 @@ function NewSaleForm() {
               onChange={(e) => setStatusVidro(e.target.value)}
               className="px-4 py-2 rounded-lg bg-slate-400 w-full self-start placeholder-white focus:outline-none"
             >
+              <option value="" disabled>
+                {" "}
+                Selecione o status{" "}
+              </option>
               {STATUS_OPTION.map(({ value, label }, index) => {
                 return (
                   <option value={value} key={index}>
@@ -185,7 +198,12 @@ function NewSaleForm() {
               value={statusAluminio}
               onChange={(e) => setStatusAluminio(e.target.value)}
               className="px-4 py-2 rounded-lg bg-slate-400 w-full self-start placeholder-white focus:outline-none"
+              aria-placeholder="Status do vidro"
             >
+              <option value="" disabled>
+                {" "}
+                Selecione o status{" "}
+              </option>
               {STATUS_OPTION.map(({ value, label }, index) => {
                 return (
                   <option value={value} key={index}>
@@ -207,6 +225,7 @@ function NewSaleForm() {
         </button>
       </form>
       <DashDock />
+      <Toaster />
     </div>
   );
 }
