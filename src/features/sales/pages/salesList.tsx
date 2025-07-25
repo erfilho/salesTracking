@@ -19,41 +19,6 @@ const TABLE_HEAD = [
  *  TOTAL => Não inciado, em andamento, finalizado
  */
 
-const TABLE_DATA = [
-  {
-    NUM_VENDA: 156,
-    NOME_CLIENTE: "Erineldo Filho",
-    TIPO_PRODUTO: "portão automático",
-    DATA_ENTRADA: "2022-01-01",
-    ST_VIDRO: "Sim",
-    ST_ALUMINIO: "Não",
-  },
-  {
-    NUM_VENDA: 154,
-    NOME_CLIENTE: "Erineldo Filho",
-    TIPO_PRODUTO: "portão automático",
-    DATA_ENTRADA: "2022-01-01",
-    ST_VIDRO: "Sim",
-    ST_ALUMINIO: "Não",
-  },
-  {
-    NUM_VENDA: 152,
-    NOME_CLIENTE: "Erineldo Filho",
-    TIPO_PRODUTO: "portão automático",
-    DATA_ENTRADA: "2022-01-01",
-    ST_VIDRO: "Sim",
-    ST_ALUMINIO: "Não",
-  },
-  {
-    NUM_VENDA: 150,
-    NOME_CLIENTE: "Erineldo Filho",
-    TIPO_PRODUTO: "portão automático",
-    DATA_ENTRADA: "2022-01-01",
-    ST_VIDRO: "Sim",
-    ST_ALUMINIO: "Não",
-  },
-];
-
 function SalesList() {
   const { userRole, isAdmin } = useAuth();
 
