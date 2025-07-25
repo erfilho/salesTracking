@@ -1,5 +1,5 @@
 import { FaSignOutAlt } from "react-icons/fa";
-import { useAuth } from "../../auth/AuthContext";
+import { useAuth } from "../../features/auth/authContext";
 
 import { useNavigate } from "react-router-dom";
 

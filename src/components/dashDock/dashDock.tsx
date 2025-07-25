@@ -6,7 +6,7 @@ import {
   FaRegUserCircle,
   FaUserTag,
 } from "react-icons/fa";
-import { useAuth } from "../../auth/AuthContext";
+import { useAuth } from "../../features/auth/authContext";
 import LogoutButton from "../buttons/logoutButton";
 
 function DashDock() {

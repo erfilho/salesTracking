@@ -1,6 +1,6 @@
 import { CircularProgress } from "@mui/material";
 
-import { useAuth } from "../../auth/AuthContext";
+import { useAuth } from "../../features/auth/authContext";
 
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";

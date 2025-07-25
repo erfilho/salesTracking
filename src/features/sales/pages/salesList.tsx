@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useAuth } from "../../auth/AuthContext";
-import DashDock from "../../components/dashDock/dashDock";
+import DashDock from "../../../components/dashDock/dashDock";
+import { useAuth } from "../../auth/authContext";
 
-import { getSales, type SaleDetails } from "../../services/firestoreService";
+import { getSales, type SaleDetails } from "../../../services/firestoreService";
 
 const TABLE_HEAD = [
   "N° VENDA",

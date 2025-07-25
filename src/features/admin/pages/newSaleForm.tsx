@@ -3,8 +3,8 @@ import { useState } from "react";
 import { toast, Toaster } from "react-hot-toast";
 
 import { Timestamp } from "firebase/firestore";
-import DashDock from "../../components/dashDock/dashDock";
-import { saveSale } from "../../services/firestoreService";
+import DashDock from "../../../components/dashDock/dashDock";
+import { saveSale } from "../../../services/firestoreService";
 
 function NewSaleForm() {
   const STATUS_OPTION = [

@@ -1,5 +1,5 @@
-import { auth, db } from "../firebase";
-import { registerUser } from "./userAuthService";
+import { auth, db } from "../../firebase/config";
+import { registerUser } from "./useAuth";
 
 import {
   signInWithEmailAndPassword,

@@ -1,4 +1,4 @@
-import DashDock from "../../components/dashDock/dashDock";
+import DashDock from "../../../components/dashDock/dashDock";
 
 function UserManagement() {
   return (
