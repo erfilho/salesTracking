@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import DashDock from "../../../components/dashDock/dashDock";
 import { useAuth } from "../../auth/authContext";
 
-import { getSales, type SaleDetails } from "../../../services/firestoreService";
+import toast, { Toaster } from "react-hot-toast";
+import {
+  getSales,
+  updateSaleStatus,
+  type SaleDetails,
+} from "../../../services/firestoreService";
 
 const TABLE_HEAD = [
   "N° VENDA",
@@ -12,6 +17,17 @@ const TABLE_HEAD = [
   "STATUS_VIDRO",
   "STATUS_ALUMINIO",
   "AÇÃO",
+];
+
+const STATUS_OPTION = [
+  "Não tem ( no projeto )",
+  "Não iniciado",
+  "Com projeto",
+  "Em andamento",
+  "Aguardando chegada",
+  "Aguardando agendamento",
+  "Aguardando montagem",
+  "Finalizado",
 ];
 
 /*  Tipos de status
@@ -28,9 +44,38 @@ function SalesList() {
     return alert(num_venda);
   }
 
-  function handleUpdateStatus(num_venda: string, type: string) {
-    return alert(`${num_venda} - ${type}`);
-  }
+  const handleUpdateStatus = async (id_venda: string, type: string) => {
+    if (!isAdmin) return;
+
+    const field = type === "aluminio" ? "aluminumStatus" : "glassStatus";
+
+    const sale = sales.find((s) => s.id === id_venda);
+    if (!sale) return;
+
+    const currentStatus = sale[field as keyof SaleDetails] as string;
+    const currentIndex = STATUS_OPTION.indexOf(currentStatus);
+    const nextStatus = STATUS_OPTION[(currentIndex + 1) % STATUS_OPTION.length];
+
+    try {
+      const updatePromise = updateSaleStatus(
+        id_venda,
+        field as "glassStatus" | "aluminumStatus",
+        nextStatus
+      );
+
+      await toast.promise(updatePromise, {
+        loading: "Atualizando o status",
+        success: "Status atualizado com sucesso!",
+        error: "Erro ao atualizar o status",
+      });
+
+      setSales((prev) =>
+        prev.map((s) => (s.id == id_venda ? { ...s, [field]: nextStatus } : s))
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   // Buscando as vendas no banco de dados
   useEffect(() => {
@@ -91,7 +136,7 @@ function SalesList() {
                         ? `cursor-pointer ${classes}`
                         : `cursor-not-allowed ${classes}`
                     }
-                    onClick={() => handleUpdateStatus(sale.id, "vidro")}
+                    onClick={() => handleUpdateStatus(sale.id, "aluminio")}
                   >
                     {sale.aluminumStatus}
                   </td>
@@ -109,6 +154,7 @@ function SalesList() {
         </table>
       </div>
       <DashDock />
+      <Toaster />
     </div>
   );
 }
