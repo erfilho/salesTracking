@@ -15,7 +15,6 @@ Aplicação web para gerenciamento do fluxo de vendas e produção em vidraçari
   - Status do vidro ( Pendente medidas / Pendente projeto / Pendente pedido / Aguardando material / Aguardando agendamento / Finalizado )
   - Status do alumínio ( Pendente medidas / Pendente projeto / Pendente pedido / Aguardando material / Aguardando agendamento / Finalizado )
 - **Hierarquia de usuários**:
-
   - **Admin**: Cria/edita/exclui pedidos e gerencia usuários
   - **Visualizador**: Apenas consulta o andamento
 
@@ -58,7 +57,6 @@ Aplicação web para gerenciamento do fluxo de vendas e produção em vidraçari
 ## 🚀 Como Executar
 
 1. **Pré-requisitos**:
-
    - Node.js v16+
    - Conta Firebase
 

@@ -3,6 +3,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  getDoc,
   getDocs,
   query,
   Timestamp,
@@ -38,6 +39,30 @@ export const getSales = async (): Promise<SaleDetails[] | undefined> => {
       aluminumStatus: doc.data().aluminumStatus,
     }));
     return fetchedSales;
+  } catch (error) {
+    console.error("Error on getSales function", error);
+    throw new Error("Failed to get sales!");
+  }
+};
+
+export const getSaleDetails = async (
+  saleId: string,
+): Promise<SaleDetails | undefined> => {
+  try {
+    const saleRef = doc(db, "sales", saleId);
+    const qSnapshot = await getDoc(saleRef);
+    if (qSnapshot.exists()) {
+      const fetchSaleDetails: SaleDetails = {
+        id: qSnapshot.id,
+        saleNumber: qSnapshot.data().saleNumber,
+        clientName: qSnapshot.data().clientName,
+        productType: qSnapshot.data().productType,
+        enterDate: qSnapshot.data().enterDate,
+        glassStatus: qSnapshot.data().glassStatus,
+        aluminumStatus: qSnapshot.data().aluminumStatus,
+      };
+      return fetchSaleDetails;
+    }
   } catch (error) {
     console.error("Error on getSales function", error);
     throw new Error("Failed to get sales!");

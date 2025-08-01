@@ -20,7 +20,7 @@ const LogoutButton = () => {
   return (
     <button
       onClick={handleLogout}
-      className="flex flex-col items-center cursor-pointer"
+      className="flex cursor-pointer flex-col items-center"
     >
       <FaSignOutAlt size={28} />
       Logout

@@ -44,8 +44,8 @@ function DashDock() {
   const navigate = useNavigate();
 
   return (
-    <div className="flex flex-row w-full justify-center p-1 fixed bottom-0">
-      <div className="flex flex-row rounded-xl justify-around bg-slate-400 p-2 gap-3 min-w-1/4">
+    <div className="fixed bottom-0 flex w-full flex-row justify-center p-1">
+      <div className="flex min-w-1/4 flex-row justify-around gap-3 rounded-xl bg-slate-400 p-2">
         {menu.map((button) => (
           <button
             key={button.label}
@@ -53,7 +53,7 @@ function DashDock() {
             className={
               button.acess == "admin" && !isAdmin
                 ? `hidden`
-                : `flex flex-col items-center cursor-pointer mx-1`
+                : `mx-1 flex cursor-pointer flex-col items-center`
             }
           >
             {button.icon}

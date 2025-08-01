@@ -23,7 +23,7 @@ export const createUserWithRole = async (data: userDoc) => {
     const userCredentials = await createUserWithEmailAndPassword(
       auth,
       data.email,
-      data.password
+      data.password,
     );
 
     const userData = userCredentials.user;

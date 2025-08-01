@@ -16,12 +16,12 @@ interface UserData {
 const registerUser = async (
   email: string,
   password: string,
-  role: "admin" | "viewer"
+  role: "admin" | "viewer",
 ): Promise<UserCredential> => {
   const userCredential: UserCredential = await createUserWithEmailAndPassword(
     auth,
     email,
-    password
+    password,
   );
 
   const userDoc: DocumentReference = doc(db, "users", userCredential.user.uid);

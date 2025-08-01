@@ -65,21 +65,21 @@ function NewSaleForm() {
   };
 
   return (
-    <div className="flex flex-col items-center gap-2 p-4 bg-zinc-200 h-screen">
-      <header className="justify-center items-center flex flex-col">
+    <div className="flex h-screen flex-col items-center gap-2 bg-zinc-200 p-4">
+      <header className="flex flex-col items-center justify-center">
         <p className="text-xl font-semibold"> Cadastre uma nova venda 😎 </p>
         <p className="text-sm font-normal"> Preencha todos os campos! </p>
       </header>
 
-      <form className="flex flex-col w-1/3 items-center">
-        <label htmlFor="sales_number" className="text-start w-full">
+      <form className="flex w-1/3 flex-col items-center">
+        <label htmlFor="sales_number" className="w-full text-start">
           {" "}
           Número da venda{" "}
         </label>
         <input
           type="number"
           id="sales_number"
-          className="px-4 py-2 rounded-lg bg-slate-400 w-1/2 self-start placeholder-white focus:outline-none"
+          className="w-1/2 self-start rounded-lg bg-slate-400 px-4 py-2 placeholder-white focus:outline-none"
           value={numeroVenda ?? ""}
           onChange={(e) => {
             const value = e.target.value;
@@ -88,33 +88,33 @@ function NewSaleForm() {
           required
         />
 
-        <label htmlFor="client_name" className="text-start w-full">
+        <label htmlFor="client_name" className="w-full text-start">
           {" "}
           Nome do cliente{" "}
         </label>
         <input
           type="text"
           id="client_name"
-          className="px-4 py-2 rounded-lg bg-slate-400 w-full placeholder-white focus:outline-none"
+          className="w-full rounded-lg bg-slate-400 px-4 py-2 placeholder-white focus:outline-none"
           value={nomeCliente}
           onChange={(e) => setNomeCliente(e.target.value)}
           required
         />
 
-        <label htmlFor="data_entrada" className="text-start w-full">
+        <label htmlFor="data_entrada" className="w-full text-start">
           {" "}
           Data entrada{" "}
         </label>
         <input
           type="date"
           id="data_entrada"
-          className="px-4 py-2 rounded-lg bg-slate-400 w-2/5 self-start placeholder-white focus:outline-none"
+          className="w-2/5 self-start rounded-lg bg-slate-400 px-4 py-2 placeholder-white focus:outline-none"
           value={dataEntrada}
           onChange={(e) => setDataEntrada(e.target.value)}
           required
         />
 
-        <label htmlFor="tipo_produto" className="text-start w-full">
+        <label htmlFor="tipo_produto" className="w-full text-start">
           {" "}
           Tipo do produto{" "}
         </label>
@@ -122,7 +122,7 @@ function NewSaleForm() {
           id="tipo_produto"
           value={tipoProduto}
           onChange={(e) => setTipoProduto(e.target.value)}
-          className="px-4 py-2 rounded-lg bg-slate-400 w-full self-start placeholder-white focus:outline-none"
+          className="w-full self-start rounded-lg bg-slate-400 px-4 py-2 placeholder-white focus:outline-none"
         >
           <option value="" disabled>
             {" "}
@@ -138,9 +138,9 @@ function NewSaleForm() {
           })}
         </select>
 
-        <div className="flex flex-row items-center gap-3 p-0 w-full">
-          <div className="flex flex-col w-1/2">
-            <label htmlFor="status_vidro" className="text-start w-full">
+        <div className="flex w-full flex-row items-center gap-3 p-0">
+          <div className="flex w-1/2 flex-col">
+            <label htmlFor="status_vidro" className="w-full text-start">
               {" "}
               Status inicial vidro{" "}
             </label>
@@ -148,7 +148,7 @@ function NewSaleForm() {
               id="status_vidro"
               value={statusVidro}
               onChange={(e) => setStatusVidro(e.target.value)}
-              className="px-4 py-2 rounded-lg bg-slate-400 w-full self-start placeholder-white focus:outline-none"
+              className="w-full self-start rounded-lg bg-slate-400 px-4 py-2 placeholder-white focus:outline-none"
             >
               <option value="" disabled>
                 {" "}
@@ -165,8 +165,8 @@ function NewSaleForm() {
             </select>
           </div>
 
-          <div className="flex flex-col w-1/2">
-            <label htmlFor="status_aluminio" className="text-start w-full">
+          <div className="flex w-1/2 flex-col">
+            <label htmlFor="status_aluminio" className="w-full text-start">
               {" "}
               Status inicial alumínio{" "}
             </label>
@@ -174,7 +174,7 @@ function NewSaleForm() {
               id="status_vidro"
               value={statusAluminio}
               onChange={(e) => setStatusAluminio(e.target.value)}
-              className="px-4 py-2 rounded-lg bg-slate-400 w-full self-start placeholder-white focus:outline-none"
+              className="w-full self-start rounded-lg bg-slate-400 px-4 py-2 placeholder-white focus:outline-none"
               aria-placeholder="Status do vidro"
             >
               <option value="" disabled>
@@ -197,7 +197,7 @@ function NewSaleForm() {
           type="button"
           disabled={isSaving}
           onClick={handleSave}
-          className="my-3 px-4 py-2 rounded-lg bg-slate-400 w-1/2 self-center cursor-pointer placeholder-white focus:outline-none"
+          className="my-3 w-1/2 cursor-pointer self-center rounded-lg bg-slate-400 px-4 py-2 placeholder-white focus:outline-none"
         >
           {isSaving ? "Salvando" : "Salvar"}
         </button>

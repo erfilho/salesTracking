@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import DashDock from "../../../components/dashDock/dashDock";
 import { useAuth } from "../../auth/authContext";
 
+import { useNavigate } from "react-router-dom";
 import { getSales, type SaleDetails } from "../../../services/firestoreService";
 
 const TABLE_HEAD = [
@@ -24,9 +25,11 @@ function SalesList() {
 
   const [sales, setSales] = useState<SaleDetails[]>([]);
 
-  function handleDetail(num_venda: string) {
-    return alert(num_venda);
-  }
+  const navigate = useNavigate();
+
+  const handleDetail = (saleId: string) => {
+    navigate(`/vendas/${saleId}`);
+  };
 
   function handleUpdateStatus(num_venda: string, type: string) {
     return alert(`${num_venda} - ${type}`);
@@ -48,8 +51,8 @@ function SalesList() {
   }, [userRole]);
 
   return (
-    <div className="flex flex-col justify-center items-center h-full w-full gap-2">
-      <div className="flex flex-row w-full h-16 bg-amber-200 justify-center items-center">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-2">
+      <div className="flex h-16 w-full flex-row items-center justify-center bg-amber-200">
         <p className="text-xl font-semibold"> Listagem de Vendas ✔ </p>
       </div>
       <div className="h-10/12 w-3/4 bg-cyan-100">
@@ -57,7 +60,7 @@ function SalesList() {
           <thead>
             <tr>
               {TABLE_HEAD.map((item, key) => (
-                <th key={key} className="text-center px-2">
+                <th key={key} className="px-2 text-center">
                   {item}
                 </th>
               ))}

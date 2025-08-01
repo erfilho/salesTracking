@@ -22,13 +22,13 @@ interface AuthContextType {
   userRole: "admin" | "viewer" | null;
   loginUser: (
     email: string,
-    password: string
+    password: string,
   ) => Promise<{ credential: UserCredential; role: "admin" | "viewer" }>;
   logoutUser: () => Promise<void>;
   registerUser: (
     email: string,
     password: string,
-    role: "admin" | "viewer"
+    role: "admin" | "viewer",
   ) => Promise<UserCredential>;
   isAdmin: boolean;
 }
@@ -77,13 +77,13 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const loginUser = async (
     email: string,
-    password: string
+    password: string,
   ): Promise<{ credential: UserCredential; role: "admin" | "viewer" }> => {
     try {
       const credential = await signInWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
       );
 
       const userDoc = await getDoc(doc(db, "users", credential.user.uid));

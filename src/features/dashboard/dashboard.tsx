@@ -5,10 +5,10 @@ import DashDock from "../../components/dashDock/dashDock";
 
 function Dashboard(): React.ReactNode {
   return (
-    <div className="flex flex-col justify-center items-center h-full w-full gap-2">
-      <div className="flex flex-row w-full h-16 bg-amber-200 justify-center items-center gap-2">
+    <div className="flex h-full w-full flex-col items-center justify-center gap-2">
+      <div className="flex h-16 w-full flex-row items-center justify-center gap-2 bg-amber-200">
         <GoGraph size={28} />
-        <p className="text-lg px-2 font-medium"> Overview </p>
+        <p className="px-2 text-lg font-medium"> Overview </p>
       </div>
       <DashDock />
     </div>
