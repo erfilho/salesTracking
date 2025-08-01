@@ -45,7 +45,7 @@ function DashDock() {
 
   return (
     <div className="fixed bottom-0 flex w-full flex-row justify-center p-1">
-      <div className="flex min-w-1/4 flex-row justify-around gap-3 rounded-xl bg-slate-400 p-2">
+      <div className="bg-dark-1 flex min-w-1/4 flex-row justify-around gap-3 rounded-xl p-2 text-white">
         {menu.map((button) => (
           <button
             key={button.label}

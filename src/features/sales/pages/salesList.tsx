@@ -3,20 +3,23 @@ import DashDock from "../../../components/dashDock/dashDock";
 import { useAuth } from "../../auth/authContext";
 
 import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 import {
   getSales,
   updateSaleStatus,
   type SaleDetails,
 } from "../../../services/firestoreService";
-import { useNavigate } from "react-router-dom";
+
+import { FaListAlt } from "react-icons/fa";
+import Header from "../../../components/header";
 
 const TABLE_HEAD = [
   "N° VENDA",
   "CLIENTE",
   "TIPO DE PRODUTO",
   "DATA DE ENTRADA",
-  "STATUS_VIDRO",
-  "STATUS_ALUMINIO",
+  "STATUS VIDRO",
+  "STATUS ALUMÍNIO",
   "AÇÃO",
 ];
 
@@ -63,7 +66,7 @@ function SalesList() {
       const updatePromise = updateSaleStatus(
         id_venda,
         field as "glassStatus" | "aluminumStatus",
-        nextStatus
+        nextStatus,
       );
 
       await toast.promise(updatePromise, {
@@ -73,7 +76,7 @@ function SalesList() {
       });
 
       setSales((prev) =>
-        prev.map((s) => (s.id == id_venda ? { ...s, [field]: nextStatus } : s))
+        prev.map((s) => (s.id == id_venda ? { ...s, [field]: nextStatus } : s)),
       );
     } catch (error) {
       console.error(error);
@@ -96,16 +99,14 @@ function SalesList() {
   }, [userRole]);
 
   return (
-    <div className="flex h-full w-full flex-col items-center justify-center gap-2">
-      <div className="flex h-16 w-full flex-row items-center justify-center bg-amber-200">
-        <p className="text-xl font-semibold"> Listagem de Vendas ✔ </p>
-      </div>
-      <div className="h-10/12 w-3/4 bg-cyan-100">
+    <div className="flex h-full w-full flex-col items-center justify-start gap-2">
+      <Header title={`Listagem de vendas`} icon={<FaListAlt />} />
+      <div className="h-9/12 w-4/5 rounded-xl bg-gray-300 p-4">
         <table className="w-full">
           <thead>
             <tr>
               {TABLE_HEAD.map((item, key) => (
-                <th key={key} className="px-2 text-center">
+                <th key={key} className="text-md px-2 text-center">
                   {item}
                 </th>
               ))}
@@ -113,7 +114,7 @@ function SalesList() {
           </thead>
           <tbody>
             {sales.map((sale) => {
-              const classes = "p-4 text-center";
+              const classes = "p-4 text-center border-b border-slate-800";
 
               return (
                 <tr key={sale.id}>

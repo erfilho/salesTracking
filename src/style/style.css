@@ -1,1 +1,15 @@
 @import "tailwindcss";
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+@theme {
+  --color-dark-1: #141117;
+  --color-dark-2: #514a54;
+  --color-purple-1: #533a70;
+  --color-purple-2: #581a73;
+  --color-blackish: #08080d;
+}

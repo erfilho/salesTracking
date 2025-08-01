@@ -3,7 +3,9 @@ import { useState } from "react";
 import { toast, Toaster } from "react-hot-toast";
 
 import { Timestamp } from "firebase/firestore";
+import { FaCartPlus } from "react-icons/fa";
 import DashDock from "../../../components/dashDock/dashDock";
+import Header from "../../../components/header";
 import { saveSale } from "../../../services/firestoreService";
 
 function NewSaleForm() {
@@ -65,13 +67,11 @@ function NewSaleForm() {
   };
 
   return (
-    <div className="flex h-screen flex-col items-center gap-2 bg-zinc-200 p-4">
-      <header className="flex flex-col items-center justify-center">
-        <p className="text-xl font-semibold"> Cadastre uma nova venda 😎 </p>
-        <p className="text-sm font-normal"> Preencha todos os campos! </p>
-      </header>
+    <div className="flex h-full w-full flex-col items-center justify-start gap-2">
+      <Header title={`Cadastrar nova venda`} icon={<FaCartPlus />} />
 
-      <form className="flex w-1/3 flex-col items-center">
+      <form className="flex w-1/3 flex-col items-center gap-2">
+        <p className="py-4"> Preencha todas as informações </p>
         <label htmlFor="sales_number" className="w-full text-start">
           {" "}
           Número da venda{" "}
@@ -108,7 +108,7 @@ function NewSaleForm() {
         <input
           type="date"
           id="data_entrada"
-          className="w-2/5 self-start rounded-lg bg-slate-400 px-4 py-2 placeholder-white focus:outline-none"
+          className="w-2/5 cursor-pointer self-start rounded-lg bg-slate-400 px-4 py-2 placeholder-white focus:outline-none"
           value={dataEntrada}
           onChange={(e) => setDataEntrada(e.target.value)}
           required
@@ -122,7 +122,7 @@ function NewSaleForm() {
           id="tipo_produto"
           value={tipoProduto}
           onChange={(e) => setTipoProduto(e.target.value)}
-          className="w-full self-start rounded-lg bg-slate-400 px-4 py-2 placeholder-white focus:outline-none"
+          className="w-full cursor-pointer self-start rounded-lg bg-slate-400 px-4 py-2 placeholder-white focus:outline-none"
         >
           <option value="" disabled>
             {" "}
@@ -148,7 +148,7 @@ function NewSaleForm() {
               id="status_vidro"
               value={statusVidro}
               onChange={(e) => setStatusVidro(e.target.value)}
-              className="w-full self-start rounded-lg bg-slate-400 px-4 py-2 placeholder-white focus:outline-none"
+              className="w-full cursor-pointer self-start rounded-lg bg-slate-400 px-4 py-2 placeholder-white focus:outline-none"
             >
               <option value="" disabled>
                 {" "}
@@ -174,7 +174,7 @@ function NewSaleForm() {
               id="status_vidro"
               value={statusAluminio}
               onChange={(e) => setStatusAluminio(e.target.value)}
-              className="w-full self-start rounded-lg bg-slate-400 px-4 py-2 placeholder-white focus:outline-none"
+              className="w-full cursor-pointer self-start rounded-lg bg-slate-400 px-4 py-2 placeholder-white focus:outline-none"
               aria-placeholder="Status do vidro"
             >
               <option value="" disabled>
