@@ -18,7 +18,7 @@ const TABLE_HEAD = [
   "N° VENDA",
   "CLIENTE",
   "TIPO DE PRODUTO",
-  "DATA DE ENTRADA",
+  "ENTRADA",
   "STATUS VIDRO",
   "STATUS ALUMÍNIO",
   "AÇÃO",
@@ -57,42 +57,53 @@ function SalesList() {
   const handleUpdateStatus = async (id_venda: string, type: string) => {
     if (!isAdmin) return;
 
+    // Atribuindo o status de acordo com o tipo selecionado
     const field = type === "aluminio" ? "aluminumStatus" : "glassStatus";
 
+    // Procurando a venda no array
     const sale = sales.find((s) => s.id === id_venda);
+
     if (!sale) return;
 
+    // Definindo o próximo status da venda
     const currentStatus = sale[field as keyof SaleDetails] as string;
     const currentIndex = STATUS_OPTION.indexOf(currentStatus);
     const nextStatus = STATUS_OPTION[(currentIndex + 1) % STATUS_OPTION.length];
 
     if (currentIndex == STATUS_OPTION.length - 1) {
+      // Caso já esteja com o status máximo
       toast.success(`Venda com status de ${type} já finalizado!`, {
         icon: "😎",
       });
       setConfirmation(null);
     } else if (currentStatus == STATUS_OPTION[0]) {
+      // Caso esteja com o status definido como não utilizável, por exemplo: não ter vidro na venda, ou alumínio
       toast(`Venda sem ${type} no projeto!`, { icon: "🤗" });
       setConfirmation(null);
     } else {
       try {
+        // Writing a promise for use with toast
         const updatePromise = updateSaleStatus(
           id_venda,
           field as "glassStatus" | "aluminumStatus",
           nextStatus,
         );
 
+        // Update the status with toast promise
         await toast.promise(updatePromise, {
           loading: "Atualizando o status",
           success: "Status atualizado com sucesso!",
           error: "Erro ao atualizar o status",
         });
 
+        // Update the sales list without refresh page
         setSales((prev) =>
           prev.map((s) =>
             s.id == id_venda ? { ...s, [field]: nextStatus } : s,
           ),
         );
+
+        // Removing the confirmation popup
         setConfirmation(null);
       } catch (error) {
         console.error(error);
@@ -106,8 +117,17 @@ function SalesList() {
       if (!userRole) return;
 
       try {
+        // Buscando as vendas
         const data = await getSales();
-        setSales(data || []);
+
+        // Sorting the sales by date in descending order
+        const sortedByDateData = (data || [])?.sort((a, b) => {
+          return (
+            b.enterDate.toDate().getTime() - a.enterDate.toDate().getTime()
+          );
+        });
+
+        setSales(sortedByDateData);
       } catch (error) {
         console.error(error);
       }
@@ -118,6 +138,7 @@ function SalesList() {
   return (
     <div className="flex h-full w-full flex-col items-center justify-start gap-2">
       <Header title={`Listagem de vendas`} icon={<FaListAlt />} />
+      {/* Confirmation popup */}
       {confirmation && (
         <ConfirmAlert
           title="Atualizar status"
@@ -128,12 +149,12 @@ function SalesList() {
           onCancel={() => setConfirmation(null)}
         />
       )}
-      <div className="h-9/12 w-4/5 rounded-xl bg-gray-300 p-4">
+      <div className="h-10/12 w-11/12 rounded-xl bg-gray-300 p-4">
         <table className="w-full">
           <thead>
             <tr>
               {TABLE_HEAD.map((item, key) => (
-                <th key={key} className="text-md px-2 text-center">
+                <th key={key} className="px-2 text-center text-sm">
                   {item}
                 </th>
               ))}
@@ -141,7 +162,8 @@ function SalesList() {
           </thead>
           <tbody>
             {sales.map((sale) => {
-              const classes = "p-4 text-center border-b border-slate-800";
+              const classes =
+                "p-4 text-center text-sm border-b border-slate-800 items-center justify-between";
 
               return (
                 <tr key={sale.id}>
@@ -176,11 +198,11 @@ function SalesList() {
                     {sale.aluminumStatus}
                   </td>
                   <td
-                    className={`cursor-pointer ${classes}`}
+                    className={`cursor-pointer ${classes} `}
                     onClick={() => handleDetail(sale.id)}
                   >
                     {" "}
-                    Ver Detalhes 👁️{" "}
+                    Ver Detalhes 🔎
                   </td>
                 </tr>
               );

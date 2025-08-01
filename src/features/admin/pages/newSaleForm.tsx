@@ -59,6 +59,13 @@ function NewSaleForm() {
         success: "Venda salva com sucesso",
         error: "Erro ao salvar a venda",
       });
+
+      setNumeroVenda("");
+      setNomeCliente("");
+      setTipoProduto("");
+      setDataEntrada("");
+      setStatusVidro("");
+      setStatusAluminio("");
     } catch (error) {
       console.error(error);
     }

@@ -3,21 +3,15 @@ import DashDock from "../../../components/dashDock/dashDock";
 import { useAuth } from "../../auth/authContext";
 
 import { CircularProgress } from "@mui/material";
-import { useParams } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+import { FaRegFolder } from "react-icons/fa";
+import { useNavigate, useParams } from "react-router-dom";
+import Header from "../../../components/header";
 import {
+  deleteSales,
   getSaleDetails,
   type SaleDetails,
 } from "../../../services/firestoreService";
-
-const TABLE_HEAD = [
-  "N° VENDA",
-  "CLIENTE",
-  "TIPO DE PRODUTO",
-  "DATA DE ENTRADA",
-  "STATUS_VIDRO",
-  "STATUS_ALUMINIO",
-  "AÇÃO",
-];
 
 /*  Tipos de status
  *  ALUMÍNIO/VIDRO => Tem, Não tem, Em andamento, Aguardando chegada, Aguardando agendamento, Aguardando montagem
@@ -27,19 +21,11 @@ const TABLE_HEAD = [
 function SalesDetails() {
   const { id } = useParams();
 
+  const navigate = useNavigate();
   const { userRole, isAdmin } = useAuth();
 
   const [sale, setSale] = useState<SaleDetails>();
-
   const [isLoading, setIsLoading] = useState(false);
-
-  function handleDetail(num_venda: string) {
-    return alert(num_venda);
-  }
-
-  function handleUpdateStatus(num_venda: string, type: string) {
-    return alert(`${num_venda} - ${type}`);
-  }
 
   // Buscando a venda no banco de dados
   useEffect(() => {
@@ -58,6 +44,28 @@ function SalesDetails() {
     fetchSales();
   }, [userRole]);
 
+  const handleDetele = async (saleId?: string) => {
+    if (!isAdmin) {
+      return;
+    }
+
+    try {
+      const deletePromise = deleteSales(saleId || "");
+
+      await toast.promise(deletePromise, {
+        loading: "Deletando venda",
+        success: "Venda deletada com sucesso!",
+        error: "Erro ao deletar venda",
+      });
+
+      setTimeout(() => {
+        navigate("/vendas");
+      }, 1200);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <div className="flex h-full w-full flex-col items-center justify-start gap-2">
       {isLoading && (
@@ -65,12 +73,67 @@ function SalesDetails() {
           <CircularProgress size={48} color="inherit" />
         </div>
       )}
-      <div className="bg-purple-1 flex h-16 w-full flex-row items-center justify-center">
-        <p className="text-xl font-semibold text-white">
-          {" "}
-          Venda {sale ? sale.saleNumber : "não encontrada!"} ✔{" "}
-        </p>
+      <Header
+        title={
+          sale
+            ? `Detalhes venda nº ${sale.saleNumber}`
+            : "Venda não encontrada!"
+        }
+        icon={<FaRegFolder />}
+      />
+
+      <div className="bg-dark-1 flex h-[500px] w-full max-w-md flex-col justify-between rounded-2xl p-6 shadow-xl backdrop-blur-md">
+        <div className="flex w-full flex-col gap-2">
+          <h2 className="mb-4 text-2xl font-bold text-white">
+            Informações da Venda
+          </h2>
+          <ul className="w-full space-y-3 place-self-start self-start justify-self-start text-sm text-white sm:text-base">
+            <li className="flex justify-between border-b border-white/10 pb-2">
+              <span className="font-semibold text-purple-300">
+                N° da Venda:
+              </span>
+              <span>{sale?.saleNumber}</span>
+            </li>
+            <li className="flex justify-between border-b border-white/10 pb-2">
+              <span className="font-semibold text-purple-300">Cliente:</span>
+              <span>{sale?.clientName}</span>
+            </li>
+            <li className="flex justify-between border-b border-white/10 pb-2">
+              <span className="font-semibold text-purple-300">
+                Data de Entrada:
+              </span>
+              <span>
+                {sale?.enterDate.toDate().toLocaleDateString("pt-BR")}
+              </span>
+            </li>
+            <li className="flex justify-between border-b border-white/10 pb-2">
+              <span className="font-semibold text-purple-300">Produto:</span>
+              <span>{sale?.productType}</span>
+            </li>
+            <li className="flex justify-between border-b border-white/10 pb-2">
+              <span className="font-semibold text-purple-300">
+                Status Vidro:
+              </span>
+              <span>{sale?.glassStatus}</span>
+            </li>
+            <li className="flex justify-between">
+              <span className="font-semibold text-purple-300">
+                Status Alumínio:
+              </span>
+              <span>{sale?.aluminumStatus}</span>
+            </li>
+          </ul>
+        </div>
+        <div className="w-full">
+          <button
+            onClick={() => handleDetele(sale?.id)}
+            className="text-md cursor-pointer rounded bg-red-700 px-4 py-2 text-white hover:bg-red-800"
+          >
+            Excluir venda
+          </button>
+        </div>
       </div>
+      <Toaster />
       <DashDock />
     </div>
   );
