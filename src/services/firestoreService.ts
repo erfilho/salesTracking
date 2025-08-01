@@ -7,6 +7,7 @@ import {
   getDocs,
   query,
   Timestamp,
+  updateDoc,
 } from "firebase/firestore";
 
 import { db } from "../firebase/config";
@@ -91,3 +92,16 @@ export const deleteSales = async (id: string) => {
     throw new Error("Failed to delete sale!");
   }
 };
+
+export const updateSaleStatus = async(id: string, field: "glassStatus" | "aluminumStatus", newStatus: string) => {
+  try {
+    const saleRef = doc(db, "sales", id);
+    await updateDoc(saleRef, {
+      [field]: newStatus,
+    });
+    console.log("Sale updated! ", id);
+  } catch(error){
+    console.error("Error on updateSaleStatus function", error);
+    throw new Error("Failed to update sale status!");
+  }
+}
