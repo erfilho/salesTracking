@@ -11,6 +11,7 @@ import {
 } from "../../../services/firestoreService";
 
 import { FaListAlt } from "react-icons/fa";
+import ConfirmAlert from "../../../components/confirmAlert";
 import Header from "../../../components/header";
 
 const TABLE_HEAD = [
@@ -40,11 +41,14 @@ const STATUS_OPTION = [
  */
 
 function SalesList() {
+  const navigate = useNavigate();
   const { userRole, isAdmin } = useAuth();
 
   const [sales, setSales] = useState<SaleDetails[]>([]);
-
-  const navigate = useNavigate();
+  const [confirmation, setConfirmation] = useState<{
+    saleId: string;
+    type: string;
+  } | null>(null);
 
   const handleDetail = (saleId: string) => {
     navigate(`/vendas/${saleId}`);
@@ -62,24 +66,37 @@ function SalesList() {
     const currentIndex = STATUS_OPTION.indexOf(currentStatus);
     const nextStatus = STATUS_OPTION[(currentIndex + 1) % STATUS_OPTION.length];
 
-    try {
-      const updatePromise = updateSaleStatus(
-        id_venda,
-        field as "glassStatus" | "aluminumStatus",
-        nextStatus,
-      );
-
-      await toast.promise(updatePromise, {
-        loading: "Atualizando o status",
-        success: "Status atualizado com sucesso!",
-        error: "Erro ao atualizar o status",
+    if (currentIndex == STATUS_OPTION.length - 1) {
+      toast.success(`Venda com status de ${type} já finalizado!`, {
+        icon: "😎",
       });
+      setConfirmation(null);
+    } else if (currentStatus == STATUS_OPTION[0]) {
+      toast(`Venda sem ${type} no projeto!`, { icon: "🤗" });
+      setConfirmation(null);
+    } else {
+      try {
+        const updatePromise = updateSaleStatus(
+          id_venda,
+          field as "glassStatus" | "aluminumStatus",
+          nextStatus,
+        );
 
-      setSales((prev) =>
-        prev.map((s) => (s.id == id_venda ? { ...s, [field]: nextStatus } : s)),
-      );
-    } catch (error) {
-      console.error(error);
+        await toast.promise(updatePromise, {
+          loading: "Atualizando o status",
+          success: "Status atualizado com sucesso!",
+          error: "Erro ao atualizar o status",
+        });
+
+        setSales((prev) =>
+          prev.map((s) =>
+            s.id == id_venda ? { ...s, [field]: nextStatus } : s,
+          ),
+        );
+        setConfirmation(null);
+      } catch (error) {
+        console.error(error);
+      }
     }
   };
 
@@ -101,6 +118,16 @@ function SalesList() {
   return (
     <div className="flex h-full w-full flex-col items-center justify-start gap-2">
       <Header title={`Listagem de vendas`} icon={<FaListAlt />} />
+      {confirmation && (
+        <ConfirmAlert
+          title="Atualizar status"
+          message={`Você tem certeza que deseja atualizar o status de ${confirmation.type} dessa venda?`}
+          onConfirm={() =>
+            handleUpdateStatus(confirmation.saleId, confirmation.type)
+          }
+          onCancel={() => setConfirmation(null)}
+        />
+      )}
       <div className="h-9/12 w-4/5 rounded-xl bg-gray-300 p-4">
         <table className="w-full">
           <thead>
@@ -128,9 +155,11 @@ function SalesList() {
                     className={
                       isAdmin
                         ? `cursor-pointer ${classes}`
-                        : `cursor-not-allowed ${classes}`
+                        : `pointer-events-none${classes}`
                     }
-                    onClick={() => handleUpdateStatus(sale.id, "vidro")}
+                    onClick={() =>
+                      setConfirmation({ saleId: sale.id, type: "vidro" })
+                    }
                   >
                     {sale.glassStatus}
                   </td>
@@ -138,9 +167,11 @@ function SalesList() {
                     className={
                       isAdmin
                         ? `cursor-pointer ${classes}`
-                        : `cursor-not-allowed ${classes}`
+                        : `pointer-events-none ${classes}`
                     }
-                    onClick={() => handleUpdateStatus(sale.id, "aluminio")}
+                    onClick={() =>
+                      setConfirmation({ saleId: sale.id, type: "aluminio" })
+                    }
                   >
                     {sale.aluminumStatus}
                   </td>

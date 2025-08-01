@@ -61,7 +61,7 @@ function SalesDetails() {
   return (
     <div className="flex h-full w-full flex-col items-center justify-start gap-2">
       {isLoading && (
-        <div className="bg-purple-2 absolute top-0 right-0 flex h-full w-full items-center justify-center gap-2 text-white opacity-50">
+        <div className="bg-dark-1 absolute top-0 right-0 flex h-full w-full items-center justify-center gap-2 text-white opacity-50">
           <CircularProgress size={48} color="inherit" />
         </div>
       )}
