@@ -18,7 +18,7 @@ function AppRouter() {
       <Route element={<ProtectedRoute />}>
         <Route path="/" element={<Dashboard />} />
         <Route path="/vendas" element={<SalesList />} />
-        <Route path="/vendas:id" element={<SalesDetails />} />
+        <Route path="/vendas/:id" element={<SalesDetails />} />
       </Route>
 
       {/* Admin routes */}
