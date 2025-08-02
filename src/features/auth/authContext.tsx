@@ -1,13 +1,15 @@
-import { auth, db } from "../../firebase/config";
-import { registerUser } from "./useAuth";
+import { initializeApp } from "firebase/app";
+import { auth, db, firebaseConfig } from "../../firebase/config";
 
 import {
+  createUserWithEmailAndPassword,
+  getAuth,
   signInWithEmailAndPassword,
   signOut,
   type User,
   type UserCredential,
 } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { doc, DocumentReference, getDoc, setDoc } from "firebase/firestore";
 
 import {
   createContext,
@@ -29,7 +31,7 @@ interface AuthContextType {
     email: string,
     password: string,
     role: "admin" | "viewer",
-  ) => Promise<UserCredential>;
+  ) => Promise<{ credential: UserCredential }>;
   isAdmin: boolean;
 }
 
@@ -127,6 +129,38 @@ export function AuthProvider({ children }: AuthProviderProps) {
     } catch (err) {
       console.error("Logout error: ", err);
     }
+  };
+
+  const registerUser = async (
+    email: string,
+    password: string,
+    role: "admin" | "viewer",
+  ): Promise<{ credential: UserCredential }> => {
+    const secondaryApp = initializeApp(firebaseConfig);
+    const secondaryAuth = getAuth(secondaryApp);
+
+    const userCredential: UserCredential = await createUserWithEmailAndPassword(
+      secondaryAuth,
+      email,
+      password,
+    );
+
+    const userDoc: DocumentReference = doc(
+      db,
+      "users",
+      userCredential.user.uid,
+    );
+
+    await setDoc(userDoc, {
+      email,
+      role,
+      createdAt: new Date(),
+    } as UserData);
+
+    // FIXME: This need to be changed for admin firebase user register
+    signOut(secondaryAuth);
+
+    return { credential: userCredential };
   };
 
   const value: AuthContextType = {

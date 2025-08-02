@@ -75,7 +75,7 @@ function NewSaleForm() {
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-start gap-2">
-      <Header title={`Cadastrar nova venda`} icon={<FaCartPlus />} />
+      <Header title={`Cadastrar nova venda`} icon={<FaCartPlus size={28} />} />
 
       <form className="flex w-1/3 flex-col items-center gap-2">
         <p className="py-4"> Preencha todas as informações </p>

@@ -79,7 +79,7 @@ function SalesDetails() {
             ? `Detalhes venda nº ${sale.saleNumber}`
             : "Venda não encontrada!"
         }
-        icon={<FaRegFolder />}
+        icon={<FaRegFolder size={28} />}
       />
 
       <div className="bg-dark-1 flex h-[500px] w-full max-w-md flex-col justify-between rounded-2xl p-6 shadow-xl backdrop-blur-md">

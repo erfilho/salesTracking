@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import { useAuth } from "../../auth/authContext";
 
 type UserRole = "admin" | "viewer";
@@ -17,8 +18,14 @@ export function AddUser() {
     e.preventDefault();
 
     try {
-      await registerUser(form.email, form.password, form.role);
-      alert("Usuário criado com sucesso!");
+      const userPromise = registerUser(form.email, form.password, form.role);
+      
+      toast.promise(userPromise, {
+        loading: "Criando usuário",
+        success: "Usuário criado com sucesso!",
+        error: "Erro ao criar usuário",
+      });
+      
       setForm({ email: "", password: "", role: "viewer" });
     } catch (erro) {
       alert("Erro ao criar usuário!");
@@ -57,6 +64,7 @@ export function AddUser() {
         <option value="admin"> Administrador </option>
       </select>
       <button type="submit"> Criar usuário </button>
+      <Toaster />
     </form>
   );
 }

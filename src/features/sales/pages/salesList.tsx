@@ -137,7 +137,7 @@ function SalesList() {
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-start gap-2">
-      <Header title={`Listagem de vendas`} icon={<FaListAlt />} />
+      <Header title={`Listagem de vendas`} icon={<FaListAlt  size={28}/>} />
       {/* Confirmation popup */}
       {confirmation && (
         <ConfirmAlert

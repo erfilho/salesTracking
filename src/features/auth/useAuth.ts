@@ -17,7 +17,7 @@ const registerUser = async (
   email: string,
   password: string,
   role: "admin" | "viewer",
-): Promise<UserCredential> => {
+): Promise<boolean> => {
   const userCredential: UserCredential = await createUserWithEmailAndPassword(
     auth,
     email,
@@ -32,7 +32,7 @@ const registerUser = async (
     createdAt: new Date(),
   } as UserData);
 
-  return userCredential;
+  return true;
 };
 
 export { registerUser };
